@@ -7,20 +7,19 @@ export default class FormComponent extends React.Component {
         this.state = {
             name: "",
             age: "",
-            gender: "male",
-            courses: ["react"]
+            gender: "Male",
+            courses: ["React"],
+            display: false
         }
     }
 
     submit = event => {
         event.preventDefault();
-        alert("Clicked");
+        this.setState({display: true});
     }
 
     onRadioClick = value => () => {
-        this.setState({
-            gender: value
-        });
+        this.setState({gender: value, display: false});
     }
 
     onCheckSelect = value => () => {
@@ -32,22 +31,23 @@ export default class FormComponent extends React.Component {
             } else {
                 courses.push(value);
             }
-            return {courses};
+            return {courses, display: false};
         });
     }
 
     nameChange = event => {
         const {value} = event.target
-        this.setState({name: value});
+        this.setState({name: value, display: false});
     }
 
     ageChange = event => {
         const {value} = event.target
-        this.setState({age: value});
+        this.setState({age: value, display: false});
     }
 
     render() {
         const {name, age, gender, courses} = this.state;
+        // const display = "";
         return(
             <div>
                 <div className="form-Div">
@@ -73,10 +73,10 @@ export default class FormComponent extends React.Component {
                             Gender
                             </Form.Label>
                             <Col sm="4">
-                                <Form.Check type="radio" onChange={this.onRadioClick("male")} label="Male" name="gender" checked={gender==="male"} />
+                                <Form.Check type="radio" onChange={this.onRadioClick("Male")} label="Male" name="gender" checked={gender==="Male"} />
                             </Col>
                             <Col sm="4">
-                                <Form.Check type="radio" onChange={this.onRadioClick("female")} label="Female" name="gender" checked={gender==="female"} />
+                                <Form.Check type="radio" onChange={this.onRadioClick("Female")} label="Female" name="gender" checked={gender==="Female"} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formInputName">
@@ -84,10 +84,10 @@ export default class FormComponent extends React.Component {
                             Courses
                             </Form.Label>
                             <Col sm="4">
-                                <Form.Check onChange={this.onCheckSelect("react")} type="checkbox" label="React" name="courses" checked={courses.includes("react")} />
+                                <Form.Check onChange={this.onCheckSelect("React")} type="checkbox" label="React" name="courses" checked={courses.includes("React")} />
                             </Col>
                             <Col sm="4">
-                                <Form.Check onChange={this.onCheckSelect("angular")} type="checkbox" label="Anguar" name="courses" checked={courses.includes("angular")} />
+                                <Form.Check onChange={this.onCheckSelect("Angular")} type="checkbox" label="Anguar" name="courses" checked={courses.includes("Angular")} />
                             </Col>
                         </Form.Group>
                         <Button variant="primary" type="submit">
@@ -99,7 +99,7 @@ export default class FormComponent extends React.Component {
                 <br />
                 <br />
                 <div className="table-div">
-                    <Display />
+                    {this.state.display && <Display data={this.state} />}
                 </div>
             </div>
         );
@@ -111,33 +111,25 @@ class Display extends React.Component {
         super(props);
     }
     render() {
+        const {name, age, gender, courses} = this.props.data;
         return(
             <Table striped bordered hover variant="dark">
-                <thead>
-                    <tr>
-                    <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                        <td>Name</td>
+                        <td>{name}</td>
                     </tr>
                     <tr>
-                    <td>2</td>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
+                        <td>Age</td>
+                        <td>{age}</td>
                     </tr>
                     <tr>
-                    <td>3</td>
-                    <td colSpan="2">Larry the Bird</td>
-                    <td>@twitter</td>
+                        <td>Gender</td>
+                        <td>{gender}</td>
+                    </tr>
+                    <tr>
+                        <td>Courses</td>
+                        <td>{courses.join(", ")}</td>
                     </tr>
                 </tbody>
             </Table>
